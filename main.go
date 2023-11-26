@@ -14,8 +14,16 @@ func main() {
 	cmds.Register(commands.NewHelpCommand(commands.HelpResources{
 		ProvideAbouts: cmds.About,
 	}))
-	cmds.Register(commands.NewMapCommand())
-	cmds.Register(commands.NewMapbCommand())
+	cmds.Register(commands.NewMapCommand(commands.MapResources{
+		ProvideLocationAreas: func () ([]string, error) {
+			return []string{"Pallet Town", "Route 1", "Viridian City"}, nil
+		},
+	}))
+	cmds.Register(commands.NewMapbCommand(commands.MapResources{
+		ProvideLocationAreas: func () ([]string, error) {
+			return []string{"Route 2", "Viridian Forest"}, nil
+		},
+	}))
 	cmds.Register(commands.NewExitCommand())
 
 	fmt.Println("Starting Pokedex...")
