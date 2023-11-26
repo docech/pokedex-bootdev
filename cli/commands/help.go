@@ -2,24 +2,24 @@ package commands
 
 import "fmt"
 
-type HelpResources struct {
+type HelpDeps struct {
 	ProvideAbouts func () []aboutCommand
 }
 
 type helpCommand struct {
-	res HelpResources
+	deps HelpDeps
 }
 
-func NewHelpCommand(res HelpResources) *helpCommand {
+func NewHelpCommand(deps HelpDeps) cliCommand {
 	return &helpCommand{
-		res: res,
+		deps: deps,
 	}
 }
 
 func (c *helpCommand) Execute() error {
 	fmt.Println("\nThis is your Pokedex")
 	fmt.Println("\nUsage:")
-	for _, about := range c.res.ProvideAbouts() {
+	for _, about := range c.deps.ProvideAbouts() {
 		fmt.Printf("%s - %s\n", about.name, about.description)
 	}
 	fmt.Print("\n")

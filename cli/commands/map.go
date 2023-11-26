@@ -1,14 +1,18 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/docech/pokedex-bootdev/domain/pokedex"
+)
 
 type MapResources struct {
-	ProvideLocationAreas func () ([]string, error)
+	ProvideLocationAreas func () ([]pokedex.LocationArea, error)
 }
 
-func printLocationAreas(locationAreas []string) {
+func printLocationAreas(locationAreas []pokedex.LocationArea) {
 	for _, area := range locationAreas {
-		fmt.Println(area)
+		fmt.Println(area.Name)
 	}
 }
 
@@ -25,7 +29,7 @@ type mapCommand struct {
 	res MapResources
 }
 
-func NewMapCommand(res MapResources) *mapCommand {
+func NewMapCommand(res MapResources) cliCommand {
 	return &mapCommand{
 		res: res,
 	}
@@ -46,7 +50,7 @@ type mapbCommand struct {
 	res MapResources
 }
 
-func NewMapbCommand(res MapResources) *mapbCommand {
+func NewMapbCommand(res MapResources) cliCommand {
 	return &mapbCommand{
 		res: res,
 	}

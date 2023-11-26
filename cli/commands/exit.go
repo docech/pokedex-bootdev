@@ -5,7 +5,7 @@ import "os"
 type exitCommand struct {
 }
 
-func NewExitCommand() exitCommand {
+func NewExitCommand() cliCommand {
 	return exitCommand{}
 }
 

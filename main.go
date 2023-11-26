@@ -5,27 +5,47 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/docech/pokedex-bootdev/api/pokeapi"
 	"github.com/docech/pokedex-bootdev/cli/commands"
+	"github.com/docech/pokedex-bootdev/domain/pokedex"
 )
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	cmds := commands.NewCliCommands()
-	cmds.Register(commands.NewHelpCommand(commands.HelpResources{
+	locationAreaResource := pokeapi.NewLocationAreasResource()
+
+	cmds.Register(commands.NewHelpCommand(commands.HelpDeps{
 		ProvideAbouts: cmds.About,
 	}))
 	cmds.Register(commands.NewMapCommand(commands.MapResources{
-		ProvideLocationAreas: func () ([]string, error) {
-			return []string{"Pallet Town", "Route 1", "Viridian City"}, nil
+		ProvideLocationAreas: func () ([]pokedex.LocationArea, error) {
+			nextResource, err := locationAreaResource.Next()
+			
+			if err != nil {
+				return nil, err
+			}
+
+			locationAreaResource = nextResource
+
+			return nextResource.Data(), nil
 		},
 	}))
 	cmds.Register(commands.NewMapbCommand(commands.MapResources{
-		ProvideLocationAreas: func () ([]string, error) {
-			return []string{"Route 2", "Viridian Forest"}, nil
+		ProvideLocationAreas: func () ([]pokedex.LocationArea, error) {
+			prevResource, err := locationAreaResource.Previous()
+			
+			if err != nil {
+				return nil, err
+			}
+
+			locationAreaResource = prevResource
+			
+			return prevResource.Data(), nil
 		},
 	}))
 	cmds.Register(commands.NewExitCommand())
-
+	
 	fmt.Println("Starting Pokedex...")
 	for {
 		fmt.Print("pokedex > ")
