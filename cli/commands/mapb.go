@@ -17,7 +17,7 @@ func NewMapbCommand(prev pokedex.PreviousLocationAreasFunc, get pokedex.GetLocat
 	}
 }
 
-func (c *mapbCommand) Execute() error {
+func (c *mapbCommand) Execute(params ...string) error {
 	if err := c.prevLocationAreas(); err != nil {
 		return err
 	}

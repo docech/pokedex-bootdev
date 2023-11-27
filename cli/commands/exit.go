@@ -9,7 +9,7 @@ func NewExitCommand() cliCommand {
 	return exitCommand{}
 }
 
-func (c exitCommand) Execute() error {
+func (c exitCommand) Execute(params ...string) error {
 	os.Exit(0)
 	return nil
 }

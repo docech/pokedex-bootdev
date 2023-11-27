@@ -10,44 +10,41 @@ import (
 )
 
 type locationAreaResource struct {
-	value pokedex.LocationArea
+	resourceUrl string
+	resource pokedex.LocationArea
+	fetcher http.FetchFunc
 }
 
-func NewLocationAreaResource(resourceUrl string, cacheConfig http.CacheConfig) func (areaName string) (api.Resource[pokedex.LocationArea], error) {
-	fetcher := fetchResource(http.CachedFetch(cacheConfig))
-
-	return func (areaName string) (api.Resource[pokedex.LocationArea], error) {
-		value, err := fetcher(fmt.Sprintf("%s%s", resourceUrl, areaName))
-		if err != nil {
-			return nil, err
-		}
-
-		resource := locationAreaResource{
-			value: value,
-		}
-		
-		return &resource, nil
+func NewLocationAreaResource(resourceUrl string, cacheConfig http.CacheConfig) api.DetailResource[string, pokedex.LocationArea] {
+	return &locationAreaResource{
+		resourceUrl: resourceUrl,
+		resource: pokedex.LocationArea{},
+		fetcher: http.CachedFetch(cacheConfig),
 	}
+}
+
+func (c *locationAreaResource) Detail(areaName string) error {
+	return c.fetchResource(fmt.Sprintf("%s%s", c.resourceUrl, areaName))
 }
 
 func (c *locationAreaResource) Data() pokedex.LocationArea {
-	return c.value
+	return c.resource
 }
 
-func fetchResource(fetcher http.FetchFunc) func (url string) (pokedex.LocationArea, error) {
-	return func (url string) (noop pokedex.LocationArea, err error) {
-		data, err := fetcher(url)
-		
-		if err != nil {
-			return noop, err
-		}
-
-		var resource pokedex.LocationArea
-		if err := json.Unmarshal(data, &resource); err != nil {
-			return noop, err
-		}
-
-		return resource, nil
+func (c *locationAreaResource) fetchResource(url string) error {
+	data, err := c.fetcher(url)
+	
+	if err != nil {
+		return err
 	}
+
+	var resource pokedex.LocationArea
+	if err := json.Unmarshal(data, &resource); err != nil {
+		return err
+	}
+
+	c.resource = resource
+
+	return nil
 }
 

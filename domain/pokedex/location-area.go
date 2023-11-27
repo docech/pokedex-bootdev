@@ -15,3 +15,6 @@ type LocationArea struct {
 		} `json:"pokemon"`
 	} `json:"pokemon_encounters"`
 }
+
+type DetailLocationAreaFunc = func(name string) error
+type GetLocationAreaFunc = func() LocationArea

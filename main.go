@@ -14,25 +14,33 @@ import (
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	cmds := commands.NewCliCommands()
-	locationAreaResource := pokeapi.NewLocationAreasResource(
+	caching := http.CacheConfig {
+		MaxAge: 60 * time.Second,
+	}
+	locationAreasResource := pokeapi.NewLocationAreasResource(
 		"https://pokeapi.co/api/v2/location-area/", 
-		http.CacheConfig {
-			MaxAge: 60 * time.Second,
-		},
+		caching,
+	)
+	locationAreaResource := pokeapi.NewLocationAreaResource(
+		"https://pokeapi.co/api/v2/location-area/",
+		caching,
 	)
 
 	cmds.Register(commands.NewHelpCommand(commands.HelpDeps{
 		ProvideAbouts: cmds.About,
 	}))
 	cmds.Register(commands.NewMapCommand(
-		locationAreaResource.Next,
-		locationAreaResource.Data,
+		locationAreasResource.Next,
+		locationAreasResource.Data,
 	))
 	cmds.Register(commands.NewMapbCommand(
-		locationAreaResource.Previous,
+		locationAreasResource.Previous,
+		locationAreasResource.Data,
+	))
+	cmds.Register(commands.NewExploreCommand(
+		locationAreaResource.Detail,
 		locationAreaResource.Data,
 	))
-	cmds.Register(commands.NewExploreCommand())
 	cmds.Register(commands.NewExitCommand())
 	
 	fmt.Println("Starting Pokedex...")

@@ -6,7 +6,7 @@ import (
 )
 
 type executableCommand interface {
-	Execute() error
+	Execute(params ...string) error
 }
 
 type aboutCommand struct {
@@ -45,12 +45,25 @@ func (c cliCommands) About() []aboutCommand {
 	return abouts
 }
 
-func (c cliCommands) Execute(commandName string) error {
-	normCommandName := strings.TrimSpace(strings.ToLower(commandName))
-	cmd, ok := c.commands[normCommandName]
+func (c cliCommands) Execute(params string) error { 
+	normParams := normParams(strings.Split(params, " "))
+	if len(normParams) == 0 {
+		return errors.New("missing command name")
+	}
+
+	commandName := normParams[0]
+	cmd, ok := c.commands[commandName]
 	if !ok {
 		return errors.New("command not found")
 	}
 
-	return cmd.Execute()
+	return cmd.Execute(normParams[1:]...)
+}
+
+func normParams(params []string) []string {
+	normParams := []string{}
+	for _, param := range params {
+		normParams = append(normParams, strings.TrimSpace(strings.ToLower(param)))
+	}
+	return normParams
 }

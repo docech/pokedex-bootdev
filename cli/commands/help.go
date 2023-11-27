@@ -16,7 +16,7 @@ func NewHelpCommand(deps HelpDeps) cliCommand {
 	}
 }
 
-func (c *helpCommand) Execute() error {
+func (c *helpCommand) Execute(params ...string) error {
 	fmt.Println("\nThis is your Pokedex")
 	fmt.Println("\nUsage:")
 	for _, about := range c.deps.ProvideAbouts() {

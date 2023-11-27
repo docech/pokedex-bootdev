@@ -17,7 +17,7 @@ func NewMapCommand(next pokedex.NextLocationAreasFunc, get pokedex.GetLocationAr
 	}
 }
 
-func (c *mapCommand) Execute() error {
+func (c *mapCommand) Execute(params ...string) error {
 	if err := c.nextLocationAreas(); err != nil {
 		return err
 	}
