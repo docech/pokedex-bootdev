@@ -12,7 +12,7 @@ import (
 type locationAreasApiResource struct {
 	Next     any         `json:"next"`
 	Previous any         `json:"previous"`
-	Results         []pokedex.LocationArea `json:"results"`
+	Results         []pokedex.LocationAreaLink `json:"results"`
 }
 
 type locationAreasResource struct {
@@ -20,12 +20,12 @@ type locationAreasResource struct {
 	fetcher 		 http.FetchFunc
 }
 
-func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokedex.LocationArea] {
+func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokedex.LocationAreaLink] {
 	return &locationAreasResource{
 		resource: &locationAreasApiResource{
 			Next: resourceUrl,
 			Previous: nil,
-			Results: []pokedex.LocationArea{},
+			Results: []pokedex.LocationAreaLink{},
 		},
 		fetcher: http.CachedFetch(cacheConfig),
 	}
@@ -47,7 +47,7 @@ func (c *locationAreasResource) Previous() error {
 	return c.fetchResource(previousURL)
 }
 
-func (c *locationAreasResource) Data() []pokedex.LocationArea {
+func (c *locationAreasResource) Data() []pokedex.LocationAreaLink {
 	return c.resource.Results
 }
 

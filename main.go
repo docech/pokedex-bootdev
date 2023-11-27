@@ -32,6 +32,7 @@ func main() {
 		locationAreaResource.Previous,
 		locationAreaResource.Data,
 	))
+	cmds.Register(commands.NewExploreCommand())
 	cmds.Register(commands.NewExitCommand())
 	
 	fmt.Println("Starting Pokedex...")

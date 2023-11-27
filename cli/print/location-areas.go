@@ -6,7 +6,7 @@ import (
 	"github.com/docech/pokedex-bootdev/domain/pokedex"
 )
 
-func PrintLocationAreas(locationAreas []pokedex.LocationArea) {
+func PrintLocationAreas(locationAreas []pokedex.LocationAreaLink) {
 	for _, area := range locationAreas {
 		fmt.Println(area.Name)
 	}
