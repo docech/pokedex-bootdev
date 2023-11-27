@@ -1,4 +1,4 @@
-package pokedex
+package pokemonworld
 
 type LocationAreaLink struct {
 	Name string `json:"name"`

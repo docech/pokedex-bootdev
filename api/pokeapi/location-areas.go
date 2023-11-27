@@ -6,13 +6,13 @@ import (
 
 	"github.com/docech/pokedex-bootdev/api"
 	"github.com/docech/pokedex-bootdev/api/http"
-	"github.com/docech/pokedex-bootdev/domain/pokedex"
+	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
 type locationAreasApiResource struct {
 	Next     any         `json:"next"`
 	Previous any         `json:"previous"`
-	Results         []pokedex.LocationAreaLink `json:"results"`
+	Results  []pokemonworld.LocationAreaLink `json:"results"`
 }
 
 type locationAreasResource struct {
@@ -20,12 +20,12 @@ type locationAreasResource struct {
 	fetcher 		 http.FetchFunc
 }
 
-func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokedex.LocationAreaLink] {
+func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokemonworld.LocationAreaLink] {
 	return &locationAreasResource{
 		resource: &locationAreasApiResource{
 			Next: resourceUrl,
 			Previous: nil,
-			Results: []pokedex.LocationAreaLink{},
+			Results: []pokemonworld.LocationAreaLink{},
 		},
 		fetcher: http.CachedFetch(cacheConfig),
 	}
@@ -47,7 +47,7 @@ func (c *locationAreasResource) Previous() error {
 	return c.fetchResource(previousURL)
 }
 
-func (c *locationAreasResource) Data() []pokedex.LocationAreaLink {
+func (c *locationAreasResource) Data() []pokemonworld.LocationAreaLink {
 	return c.resource.Results
 }
 

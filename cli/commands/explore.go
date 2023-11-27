@@ -5,15 +5,15 @@ import (
 	"fmt"
 
 	"github.com/docech/pokedex-bootdev/cli/print"
-	"github.com/docech/pokedex-bootdev/domain/pokedex"
+	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
 type exploreCommand struct {
-	detailLocationArea pokedex.DetailLocationAreaFunc
-	getLocationArea pokedex.GetLocationAreaFunc
+	detailLocationArea pokemonworld.DetailLocationAreaFunc
+	getLocationArea pokemonworld.GetLocationAreaFunc
 }
 
-func NewExploreCommand(detail pokedex.DetailLocationAreaFunc, get pokedex.GetLocationAreaFunc) cliCommand {
+func NewExploreCommand(detail pokemonworld.DetailLocationAreaFunc, get pokemonworld.GetLocationAreaFunc) cliCommand {
 	return &exploreCommand{
 		detailLocationArea: detail,
 		getLocationArea: get,

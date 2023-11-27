@@ -2,15 +2,15 @@ package commands
 
 import (
 	"github.com/docech/pokedex-bootdev/cli/print"
-	"github.com/docech/pokedex-bootdev/domain/pokedex"
+	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
 type mapbCommand struct {
-	prevLocationAreas pokedex.PreviousLocationAreasFunc
-	getLocationAreas pokedex.GetLocationAreasFunc
+	prevLocationAreas pokemonworld.PreviousLocationAreasFunc
+	getLocationAreas pokemonworld.GetLocationAreasFunc
 }
 
-func NewMapbCommand(prev pokedex.PreviousLocationAreasFunc, get pokedex.GetLocationAreasFunc) cliCommand {
+func NewMapbCommand(prev pokemonworld.PreviousLocationAreasFunc, get pokemonworld.GetLocationAreasFunc) cliCommand {
 	return &mapbCommand{
 		prevLocationAreas: prev,
 		getLocationAreas: get,
