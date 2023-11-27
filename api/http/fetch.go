@@ -1,28 +1,42 @@
 package http
 
 import (
-	"encoding/json"
 	"io"
 	"net/http"
-
-	"github.com/docech/pokedex-bootdev/api"
 )
 
-func Fetch[V any](url string, resource api.Resource[V]) error {
+type FetchFunc = func(string) ([]byte, error)
+
+func fetch(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer response.Body.Close()
 
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	if err := json.Unmarshal(data, &resource); err != nil {
-		return err
-	}
+	return data, nil
+}
 
-	return nil
+func CachedFetch(config CacheConfig) FetchFunc {
+	cache := newByteCache(config.MaxAge)
+
+	return func(url string) ([]byte, error) {
+		if data, ok := cache.Get(url); ok {
+			return data, nil
+		}
+
+		data, err := fetch(url)
+		if err != nil {
+			return nil, err
+		}
+
+		cache.Set(url, data)
+
+		return data, nil
+	}
 }

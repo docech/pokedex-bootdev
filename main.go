@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/docech/pokedex-bootdev/api/http"
 	"github.com/docech/pokedex-bootdev/api/pokeapi"
 	"github.com/docech/pokedex-bootdev/cli/commands"
 	"github.com/docech/pokedex-bootdev/domain/pokedex"
@@ -13,7 +15,12 @@ import (
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	cmds := commands.NewCliCommands()
-	locationAreaResource := pokeapi.NewLocationAreasResource()
+	locationAreaResource := pokeapi.NewLocationAreasResource(
+		"https://pokeapi.co/api/v2/location-area/", 
+		http.CacheConfig {
+			MaxAge: 60 * time.Second,
+		},
+	)
 
 	cmds.Register(commands.NewHelpCommand(commands.HelpDeps{
 		ProvideAbouts: cmds.About,
@@ -40,7 +47,7 @@ func main() {
 			}
 
 			locationAreaResource = prevResource
-			
+
 			return prevResource.Data(), nil
 		},
 	}))

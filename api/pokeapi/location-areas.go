@@ -1,6 +1,7 @@
 package pokeapi
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/docech/pokedex-bootdev/api"
@@ -8,43 +9,62 @@ import (
 	"github.com/docech/pokedex-bootdev/domain/pokedex"
 )
 
-type locationAreasResource struct {
-	NextResults     any         `json:"next"`
-	PreviousResults any         `json:"previous"`
+type locationAreasApiResource struct {
+	Next     any         `json:"next"`
+	Previous any         `json:"previous"`
 	Results         []pokedex.LocationArea `json:"results"`
 }
 
-func fetchResource(url string) (api.Resource[[]pokedex.LocationArea], error) {
-	var resource locationAreasResource
-	err := http.Fetch[[]pokedex.LocationArea](url, &resource)
-	return &resource, err
+type locationAreasResource struct {
+	resource	 	*locationAreasApiResource
+	fetcher 		 http.FetchFunc
 }
 
-func NewLocationAreasResource() api.Resource[[]pokedex.LocationArea] {
+func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokedex.LocationArea] {
 	return &locationAreasResource{
-		NextResults: "https://pokeapi.co/api/v2/location-area/",
-		PreviousResults: nil,
-		Results: []pokedex.LocationArea{},
+		resource: &locationAreasApiResource{
+			Next: resourceUrl,
+			Previous: nil,
+			Results: []pokedex.LocationArea{},
+		},
+		fetcher: http.CachedFetch(cacheConfig),
 	}
 }
 
-func (r *locationAreasResource) Next() (api.Resource[[]pokedex.LocationArea], error) {
-	nextURL, ok := r.NextResults.(string)
+func (c *locationAreasResource) Next() (api.ListResource[pokedex.LocationArea], error) {
+	nextURL, ok := c.resource.Next.(string)
 	if !ok {
 		return nil, errors.New("no next resource")
 	}
-	return fetchResource(nextURL)
+	return c.fetchResource(nextURL)
 }
 
-func (r *locationAreasResource) Previous() (api.Resource[[]pokedex.LocationArea], error) {
-	previousURL, ok := r.PreviousResults.(string)
+func (c *locationAreasResource) Previous() (api.ListResource[pokedex.LocationArea], error) {
+	previousURL, ok := c.resource.Previous.(string)
 	if !ok {
 		return nil, errors.New("no previous resource")
 	}
-	return fetchResource(previousURL)
+	return c.fetchResource(previousURL)
 }
 
-func (r *locationAreasResource) Data() []pokedex.LocationArea {
-	return r.Results
+func (c *locationAreasResource) Data() []pokedex.LocationArea {
+	return c.resource.Results
+}
+
+func (c *locationAreasResource) fetchResource(url string) (api.ListResource[pokedex.LocationArea], error) {
+	data, err := c.fetcher(url)
+	
+	if err != nil {
+		return nil, err
+	}
+
+	var resource locationAreasApiResource
+	if err := json.Unmarshal(data, &resource); err != nil {
+		return nil, err
+	}
+
+	c.resource = &resource
+
+	return c, err
 }
 

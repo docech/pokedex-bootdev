@@ -1,7 +1,11 @@
 package api
 
 type Resource[T any] interface {
-	Next() (Resource[T], error)
-	Previous() (Resource[T], error)
 	Data() T
+}
+
+type ListResource[T any] interface {
+	Resource[[]T]
+	Next() (ListResource[T], error)
+	Previous() (ListResource[T], error)
 }
