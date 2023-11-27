@@ -6,6 +6,6 @@ type Resource[T any] interface {
 
 type ListResource[T any] interface {
 	Resource[[]T]
-	Next() (ListResource[T], error)
-	Previous() (ListResource[T], error)
+	Next() error
+	Previous() error
 }

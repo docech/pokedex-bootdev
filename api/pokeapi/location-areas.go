@@ -31,18 +31,18 @@ func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) 
 	}
 }
 
-func (c *locationAreasResource) Next() (api.ListResource[pokedex.LocationArea], error) {
+func (c *locationAreasResource) Next() error {
 	nextURL, ok := c.resource.Next.(string)
 	if !ok {
-		return nil, errors.New("no next resource")
+		return errors.New("no next resource")
 	}
 	return c.fetchResource(nextURL)
 }
 
-func (c *locationAreasResource) Previous() (api.ListResource[pokedex.LocationArea], error) {
+func (c *locationAreasResource) Previous() error {
 	previousURL, ok := c.resource.Previous.(string)
 	if !ok {
-		return nil, errors.New("no previous resource")
+		return errors.New("no previous resource")
 	}
 	return c.fetchResource(previousURL)
 }
@@ -51,20 +51,20 @@ func (c *locationAreasResource) Data() []pokedex.LocationArea {
 	return c.resource.Results
 }
 
-func (c *locationAreasResource) fetchResource(url string) (api.ListResource[pokedex.LocationArea], error) {
+func (c *locationAreasResource) fetchResource(url string) error {
 	data, err := c.fetcher(url)
 	
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var resource locationAreasApiResource
 	if err := json.Unmarshal(data, &resource); err != nil {
-		return nil, err
+		return err
 	}
 
 	c.resource = &resource
 
-	return c, err
+	return nil
 }
 

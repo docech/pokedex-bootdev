@@ -9,7 +9,6 @@ import (
 	"github.com/docech/pokedex-bootdev/api/http"
 	"github.com/docech/pokedex-bootdev/api/pokeapi"
 	"github.com/docech/pokedex-bootdev/cli/commands"
-	"github.com/docech/pokedex-bootdev/domain/pokedex"
 )
 
 func main() {
@@ -25,32 +24,14 @@ func main() {
 	cmds.Register(commands.NewHelpCommand(commands.HelpDeps{
 		ProvideAbouts: cmds.About,
 	}))
-	cmds.Register(commands.NewMapCommand(commands.MapResources{
-		ProvideLocationAreas: func () ([]pokedex.LocationArea, error) {
-			nextResource, err := locationAreaResource.Next()
-			
-			if err != nil {
-				return nil, err
-			}
-
-			locationAreaResource = nextResource
-
-			return nextResource.Data(), nil
-		},
-	}))
-	cmds.Register(commands.NewMapbCommand(commands.MapResources{
-		ProvideLocationAreas: func () ([]pokedex.LocationArea, error) {
-			prevResource, err := locationAreaResource.Previous()
-			
-			if err != nil {
-				return nil, err
-			}
-
-			locationAreaResource = prevResource
-
-			return prevResource.Data(), nil
-		},
-	}))
+	cmds.Register(commands.NewMapCommand(
+		locationAreaResource.Next,
+		locationAreaResource.Data,
+	))
+	cmds.Register(commands.NewMapbCommand(
+		locationAreaResource.Previous,
+		locationAreaResource.Data,
+	))
 	cmds.Register(commands.NewExitCommand())
 	
 	fmt.Println("Starting Pokedex...")

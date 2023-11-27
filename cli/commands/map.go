@@ -1,42 +1,29 @@
 package commands
 
 import (
-	"fmt"
-
+	"github.com/docech/pokedex-bootdev/cli/print"
 	"github.com/docech/pokedex-bootdev/domain/pokedex"
 )
 
-type MapResources struct {
-	ProvideLocationAreas func () ([]pokedex.LocationArea, error)
-}
-
-func printLocationAreas(locationAreas []pokedex.LocationArea) {
-	for _, area := range locationAreas {
-		fmt.Println(area.Name)
-	}
-}
-
-func handleExecute(res MapResources) error {
-	areas, err := res.ProvideLocationAreas()
-	if err != nil {
-		return err
-	}
-	printLocationAreas(areas)
-	return nil
-}
-
 type mapCommand struct {
-	res MapResources
+	nextLocationAreas pokedex.NextLocationAreasFunc
+	getLocationAreas pokedex.GetLocationAreasFunc
 }
 
-func NewMapCommand(res MapResources) cliCommand {
+func NewMapCommand(next pokedex.NextLocationAreasFunc, get pokedex.GetLocationAreasFunc) cliCommand {
 	return &mapCommand{
-		res: res,
+		nextLocationAreas: next,
+		getLocationAreas: get,
 	}
 }
 
 func (c *mapCommand) Execute() error {
-	return handleExecute(c.res)
+	if err := c.nextLocationAreas(); err != nil {
+		return err
+	}
+
+	print.PrintLocationAreas(c.getLocationAreas())
+	return nil
 }
 
 func (c mapCommand) About() aboutCommand {
@@ -46,23 +33,3 @@ func (c mapCommand) About() aboutCommand {
 	}
 }
 
-type mapbCommand struct {
-	res MapResources
-}
-
-func NewMapbCommand(res MapResources) cliCommand {
-	return &mapbCommand{
-		res: res,
-	}
-}
-
-func (c *mapbCommand) Execute() error {
-	return handleExecute(c.res)
-}
-
-func (c mapbCommand) About() aboutCommand {
-	return aboutCommand{
-		name: "mapb",
-		description: `Opposite of map command. Displays previous X location areas from Pokemon world.`,
-	}
-}
