@@ -11,14 +11,14 @@ import (
 
 type locationAreaResource struct {
 	resourceUrl string
-	resource pokemonworld.LocationArea
+	resource *pokemonworld.LocationArea
 	fetcher http.FetchFunc
 }
 
 func NewLocationAreaResource(resourceUrl string, cacheConfig http.CacheConfig) api.DetailResource[string, pokemonworld.LocationArea] {
 	return &locationAreaResource{
 		resourceUrl: resourceUrl,
-		resource: pokemonworld.LocationArea{},
+		resource: &pokemonworld.LocationArea{},
 		fetcher: http.CachedFetch(cacheConfig),
 	}
 }
@@ -28,7 +28,7 @@ func (c *locationAreaResource) Detail(areaName string) error {
 }
 
 func (c *locationAreaResource) Data() pokemonworld.LocationArea {
-	return c.resource
+	return *c.resource
 }
 
 func (c *locationAreaResource) fetchResource(url string) error {
@@ -43,7 +43,7 @@ func (c *locationAreaResource) fetchResource(url string) error {
 		return err
 	}
 
-	c.resource = resource
+	c.resource = &resource
 
 	return nil
 }

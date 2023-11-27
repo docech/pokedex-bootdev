@@ -9,6 +9,7 @@ import (
 	"github.com/docech/pokedex-bootdev/api/http"
 	"github.com/docech/pokedex-bootdev/api/pokeapi"
 	"github.com/docech/pokedex-bootdev/cli/commands"
+	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
 func main() {
@@ -25,6 +26,12 @@ func main() {
 		"https://pokeapi.co/api/v2/location-area/",
 		caching,
 	)
+	pokemonResource := pokeapi.NewPokemonResource(
+		"https://pokeapi.co/api/v2/pokemon/",
+		caching,
+	)
+	
+	pokedex := pokemonworld.NewPokedex()
 
 	cmds.Register(commands.NewHelpCommand(commands.HelpDeps{
 		ProvideAbouts: cmds.About,
@@ -40,6 +47,11 @@ func main() {
 	cmds.Register(commands.NewExploreCommand(
 		locationAreaResource.Detail,
 		locationAreaResource.Data,
+	))
+	cmds.Register(commands.NewCatchCommand(
+		pokedex,
+		pokemonResource.Detail,
+		pokemonResource.Data,
 	))
 	cmds.Register(commands.NewExitCommand())
 	

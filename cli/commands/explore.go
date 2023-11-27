@@ -21,6 +21,9 @@ func NewExploreCommand(detail pokemonworld.DetailLocationAreaFunc, get pokemonwo
 }
 
 func (c *exploreCommand) Execute(params ...string) error {
+	if len(params) == 0 {
+		return errors.New("missing area name")
+	}
 	if len(params) > 1 {
 		return errors.New("too many parameters, expected one area name")
 	}
