@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/docech/pokedex-bootdev/api"
-	"github.com/docech/pokedex-bootdev/api/http"
+	"github.com/docech/pokedex-bootdev/api/internal"
+	"github.com/docech/pokedex-bootdev/api/internal/http"
 	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
@@ -15,7 +15,7 @@ type pokemonResource struct {
 	fetcher http.FetchFunc
 }
 
-func NewPokemonResource(resourceUrl string, cacheConfig http.CacheConfig) api.DetailResource[string, pokemonworld.Pokemon] {
+func NewPokemonResource(resourceUrl string, cacheConfig http.CacheConfig) internal.DetailResource[string, pokemonworld.Pokemon] {
 	return &pokemonResource{
 		resourceUrl: resourceUrl,
 		resource: &pokemonworld.Pokemon{},

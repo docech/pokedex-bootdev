@@ -23,21 +23,21 @@ type cliCommand interface {
 	descriptiveCommand
 }
 
-type cliCommands struct {
+type CliCommands struct {
 	commands map[string]cliCommand
 }
 
-func NewCliCommands() *cliCommands {
-	return &cliCommands{
+func NewCliCommands() *CliCommands {
+	return &CliCommands{
 		commands: map[string]cliCommand{},
 	}
 }
 
-func (c *cliCommands) Register(cmd cliCommand) {
+func (c *CliCommands) Register(cmd cliCommand) {
 	c.commands[cmd.About().name] = cmd
 }
 
-func (c cliCommands) About() []aboutCommand {
+func (c CliCommands) About() []aboutCommand {
 	abouts := []aboutCommand{}
 	for _, cmd := range c.commands {
 		abouts = append(abouts, cmd.About())
@@ -45,7 +45,7 @@ func (c cliCommands) About() []aboutCommand {
 	return abouts
 }
 
-func (c cliCommands) Execute(params string) error { 
+func (c CliCommands) Execute(params string) error { 
 	normParams := normParams(strings.Split(params, " "))
 	if len(normParams) == 0 {
 		return errors.New("missing command name")

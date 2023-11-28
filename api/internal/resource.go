@@ -1,4 +1,4 @@
-package api
+package internal
 
 type Resource[T any] interface {
 	Data() T

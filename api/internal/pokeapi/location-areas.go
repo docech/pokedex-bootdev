@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/docech/pokedex-bootdev/api"
-	"github.com/docech/pokedex-bootdev/api/http"
+	"github.com/docech/pokedex-bootdev/api/internal"
+	"github.com/docech/pokedex-bootdev/api/internal/http"
 	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
@@ -20,7 +20,7 @@ type locationAreasResource struct {
 	fetcher 		 http.FetchFunc
 }
 
-func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) api.ListResource[pokemonworld.LocationAreaLink] {
+func NewLocationAreasResource(resourceUrl string, cacheConfig http.CacheConfig) internal.ListResource[pokemonworld.LocationAreaLink] {
 	return &locationAreasResource{
 		resource: &locationAreasApiResource{
 			Next: resourceUrl,
