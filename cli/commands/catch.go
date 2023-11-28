@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 
 	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
@@ -40,9 +41,14 @@ func (c catchCommand) Execute(params ...string) error {
 	}
 
 	fmt.Printf("Throwing Pokeball at %s...\n", pokemonName)
-	fmt.Printf("%s was caught\n", pokemonName)
-
-	c.pokedex.CaughtPokemon(c.getPokemon())
+	baseExperience := c.getPokemon().BaseExperience
+	catchProbability := float64(baseExperience) / 300.0
+	if rand.Float64() < catchProbability {
+		fmt.Printf("%s was caught!\n", pokemonName)
+		c.pokedex.CaughtPokemon(c.getPokemon())
+	} else {
+		fmt.Printf("%s escaped!\n", pokemonName)
+	}
 
 	return nil
 }
