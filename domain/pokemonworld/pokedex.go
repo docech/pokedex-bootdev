@@ -8,6 +8,7 @@ import (
 type Pokedex interface {
 	CaughtPokemon(pokemon Pokemon)
 	InspectPokemon(name string) error
+	ListCaughtPokemons() error
 }
 
 type pokedex struct {
@@ -27,7 +28,7 @@ func (p *pokedex) CaughtPokemon(pokemon Pokemon) {
 func (p *pokedex) InspectPokemon(name string) error {
 	pokemon, ok := p.caughtPokemons[name]
 	if !ok {
-		return errors.New("you haven't caught that pokemon yet!")
+		return errors.New("you haven't caught that pokemon yet")
 	}
 
 	fmt.Println("Name: ", pokemon.Name)
@@ -40,6 +41,18 @@ func (p *pokedex) InspectPokemon(name string) error {
 	fmt.Println("Types:")
 	for _, t := range pokemon.Types {
 		fmt.Printf("  -%s\n", t.Type.Name)
+	}
+
+	return nil
+}
+
+func (p *pokedex) ListCaughtPokemons() error {
+	if len(p.caughtPokemons) == 0 {
+		return errors.New("you haven't caught any pokemon yet")
+	}
+
+	for _, pokemon := range p.caughtPokemons {
+		fmt.Println(" - ", pokemon.Name)
 	}
 
 	return nil
