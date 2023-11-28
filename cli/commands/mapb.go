@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"github.com/docech/pokedex-bootdev/cli/print"
 	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
@@ -22,7 +21,7 @@ func (c *mapbCommand) Execute(params ...string) error {
 		return err
 	}
 
-	print.PrintLocationAreas(c.getLocationAreas())
+	pokemonworld.ShowSurroundingLocationAreas(c.getLocationAreas())
 	return nil
 }
 

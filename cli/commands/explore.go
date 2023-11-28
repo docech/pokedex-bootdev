@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/docech/pokedex-bootdev/cli/print"
 	"github.com/docech/pokedex-bootdev/domain/pokemonworld"
 )
 
@@ -34,7 +33,7 @@ func (c *exploreCommand) Execute(params ...string) error {
 		return err
 	}
 
-	print.PrintPokemonEncountersInLocationArea(c.getLocationArea())
+	pokemonworld.ExplorePokemonEncountersInLocationArea(c.getLocationArea())
 	return nil
 }
 
