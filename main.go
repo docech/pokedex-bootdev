@@ -53,6 +53,9 @@ func main() {
 		pokemonResource.Detail,
 		pokemonResource.Data,
 	))
+	cmds.Register(commands.NewInspectCommand(
+		pokedex,
+	))
 	cmds.Register(commands.NewExitCommand())
 	
 	fmt.Println("Starting Pokedex...")
